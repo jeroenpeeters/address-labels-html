@@ -1,0 +1,33 @@
+@media print {
+  .noPrint {
+    display: none !important;
+    height: 0;
+  }
+  @page {
+    size: auto;   /* auto is the initial value */
+
+    /* this affects the margin in the printer settings */
+    margin: 0mm;
+  }
+
+  body {
+    margin: 0px
+  }
+}
+
+table {
+  width: 100%;
+  page-break-after: always;
+}
+table tr td {
+  height: 34mm;
+  width:33.33%;
+  overflow: hidden;
+  vertical-align: top;
+}
+table tr td span{
+  display: inline-block;
+  padding: 2mm;
+  height: 100%;
+  /*border-bottom: 1px solid white;*/
+}
