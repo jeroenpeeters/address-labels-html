@@ -15,11 +15,66 @@
         <input type="file" id="fileInput">
       </div>
       <pre id="fileDisplayArea"></pre>
+      <div id="dropdowns"></div>
+      <hr />
     </span>
     <div id="content"></div>
 
 
     <script>
+    var csvData = [];
+    var fieldMap = {};
+
+    renderLabels = function(objects, fieldMap){
+      var html = '';
+
+      for(idx in objects){
+        idx = parseInt(idx)
+        row = objects[idx]
+        address = '';
+        if(fieldMap.name){ address += '<span class="name">'+row[fieldMap.name]+'</span>' }
+        if(fieldMap.street){ address += '<span class="street">'+row[fieldMap.street]+'</span>' }
+        if(fieldMap.postalcode){ address += '<span class="postalcode">'+row[fieldMap.postalcode]+'</span>' }
+        if(fieldMap.city){ address += '<span class="city">'+row[fieldMap.city]+'</span>' }
+
+        if(row.Land && fieldMap.country) {
+          address += '<span class="country">'+row[fieldMap.country]+'</span>'
+        }
+        html += '<td><span class="sticker">'+address+'</span></td>'
+        if( (idx+1) % 24 == 0){
+          html += '</tr></table><table><tr>'
+        }else if( (idx+1) % 3 == 0){
+          html += '</tr><tr>'
+        }
+      }
+      $('#content').html('<table><tr>'+html+'</tr></table>');
+    }
+
+    optionselected = function(e) {
+      fieldMap[e.target.name] =  e.target.value;
+      renderLabels(csvData, fieldMap);
+    }
+    renderDropDowns = function(objects){
+      var html = '';
+      var object = objects[0]
+      items = Object.keys(object)
+
+      html += renderDropDown('name', 'Select the name field', items);
+      html += renderDropDown('street', 'Select the street field', items);
+      html += renderDropDown('postalcode', 'Select the postal field', items);
+      html += renderDropDown('city', 'Select the city field', items);
+      html += renderDropDown('country', 'Select the country field', items);
+      $('#dropdowns').html(html);
+    }
+    renderDropDown = function(key, description, options){
+      var html = '<option selected="true" disabled="disabled">'+description+'</option>';
+      for(option of options){
+        html += '<option value="'+option+'">'+option+'</option>'
+      }
+      return '<select onchange="optionselected(event)" name="'+key+'">'+html+'</select>';
+    }
+
+
     window.onload = function() {
       var fileInput = document.getElementById('fileInput');
       var fileDisplayArea = document.getElementById('fileDisplayArea');
@@ -31,31 +86,9 @@
           var reader = new FileReader();
 
           reader.onload = function(e) {
-            objects = $.csv.toObjects(reader.result);
-            fileDisplayArea.innerText = JSON.stringify(objects)
-            //fileDisplayArea.innerText = reader.result;
-            var html = '';
-
-            for(idx in objects){
-              idx = parseInt(idx)
-              row = objects[idx]
-              console.log(typeof idx, idx, idx+1, (idx+1) % 8,  (idx+1) % 8 == 0);
-              address = '<span class="name">'+row.Naam+'</span>'
-              address += '<span class="street">'+row['Straat + Huisnummer']+'</span>'
-              address += '<span class="postalcode">'+row.Postcode+'</span>'
-              address += '<span class="city">'+row.Plaats+'</span>'
-
-              if(row.Land){
-                address += '<span class="country">'+row.Land+'</span>'
-              }
-              html += '<td><span class="sticker">'+address+'</span></td>'
-              if( (idx+1) % 24 == 0){
-                html += '</tr></table><table><tr>'
-              }else if( (idx+1) % 3 == 0){
-                html += '</tr><tr>'
-              }
-            }
-            $('#content').html('<table><tr>'+html+'</tr></table>');
+            csvData = $.csv.toObjects(reader.result);
+            fileDisplayArea.innerText = 'Found ' + csvData.length + ' records.'
+            renderDropDowns(csvData);
           }
 
           reader.readAsText(file);
