@@ -1,3 +1,5 @@
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,600italic,700italic,400italic);
+
 @media print {
   .noPrint {
     display: none !important;
@@ -25,9 +27,38 @@ table tr td {
   overflow: hidden;
   vertical-align: top;
 }
-table tr td span{
+table tr td span.sticker{
   display: inline-block;
   padding: 2mm;
   height: 100%;
   /*border-bottom: 1px solid white;*/
+}
+
+.sticker {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 12px;
+}
+
+.name {
+  font-style: italic;
+  font-weight: 600;
+}
+
+.street {
+  display: block;
+  margin-top:2mm;
+}
+
+.country {
+  font-weight: bold;
+}
+
+.name:after, .street:after, .city:after {
+  content:"\a";
+  white-space: pre;
+}
+
+.postalcode:after{
+  content:" ";
+  white-space: pre;
 }
