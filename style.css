@@ -26,6 +26,10 @@ table tr td {
   width:33.33%;
   overflow: hidden;
   vertical-align: top;
+  background-position: right bottom;
+  background-image: url('./image.jpg');
+  background-size: 85px;;
+  background-repeat: no-repeat;
 }
 table tr td span.sticker{
   display: inline-block;
